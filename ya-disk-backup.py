@@ -12,7 +12,7 @@ from src.YandexDiskRestClient import YandexDiskRestClient
 
 class MakeBackup:
 	def __init__(self):
-		token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa_change_it"
+		token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa_change_it"
 		self.client = YandexDiskRestClient(token)
 
 	def get_disk_metadata(self):
@@ -111,7 +111,7 @@ class MakeBackup:
 		try:
 			self.client.upload_file_from_url(url, element_path)
 			print("\n----------------------")
-			print("File " + url + " was downloaded to " + element_path)
+			print("File " + url + " was uploaded to " + element_path)
 			print("----------------------")
 		except YandexDiskException as exp:
 			print(exp)
@@ -136,30 +136,35 @@ def main():
 	print("----------------------\n")
 
 
-
 	# Local Backup
-	_data = os.listdir('/backups/data/ruweb/')
+	yandex.creating_of_folder('/backups')
+	yandex.creating_of_folder('/backups/ruweb')
+	
+	_data = os.listdir('/backups/data/fetch-site-backups.ihptru.net/www/ruweb/')
 	for _file in _data:
-		if 'tar' in _file:
 
-			if not yandex.get_meta_of_element('/backups/ruweb/' + _file):	# File does not exist on Yandex.Disc
-				yandex.creating_of_folder('/backups')
-				yandex.creating_of_folder('/backups/ruweb')
+		if not yandex.get_meta_of_element('/backups/ruweb/' + _file):	# File does not exist on Yandex.Disc
 
-				yandex.upload_file('/backups/data/ruweb/' + _file, '/backups/ruweb/' + _file)
-			else:
-				print("\n----------------------")
-				print("File " + _file + " exists on Yandex.Disc. Skipping...")
-				print("----------------------")
-			
-			os.remove('/backups/data/ruweb/' + _file)
+			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/ruweb/' + _file, '/backups/ruweb/' + _file)
+
+		else:
 			print("\n----------------------")
-			print("Removed /backups/data/ruweb/" + _file + " from Local Disc")
+			print("File " + _file + " exists on Yandex.Disc. Skipping...")
 			print("----------------------")
+		
+		os.remove('/backups/data/fetch-site-backups.ihptru.net/www/ruweb/' + _file)
+		print("\n----------------------")
+		print("Removed /backups/data/fetch-site-backups.ihptru.net/www/ruweb/" + _file + " from Local Disc")
+		print("----------------------")
 
 
 
 	# Download backups from remote site and upload them to Yandex.Disc
+
+	yandex.creating_of_folder('/backups')
+	yandex.creating_of_folder('/backups/baxxster')
+	yandex.creating_of_folder('/backups/baxxster/openra')
+
 	data = urllib.request.urlopen('http://fetch-site-backups.openra.net').read().decode('utf-8')
 	
 	regex = re.compile('href="(.*?)"')
@@ -170,34 +175,36 @@ def main():
 			continue
 
 		print("\n\n\n**********************")
-		response = urllib.request.urlopen('http://fetch-site-backups.openra.net/' + remote_f)
-		CHUNK = 16 * 1024
-		with open("/backups/data/baxxster/" + remote_f, 'wb') as f:
-			while True:
-				chunk = response.read(CHUNK)
-				if not chunk: break
-				f.write(chunk)
-
-		print("\n----------------------")
-		print("Downloaded remote file to /backups/data/baxxster/" + remote_f)
-		print("----------------------")
-
+		print("**********************")
 
 		if not yandex.get_meta_of_element('/backups/baxxster/openra/' + remote_f):
-			yandex.creating_of_folder('/backups')
-			yandex.creating_of_folder('/backups/baxxster')
-			yandex.creating_of_folder('/backups/baxxster/openra')
 
-			yandex.upload_file('/backups/data/baxxster/' + remote_f, '/backups/baxxster/openra/' + remote_f)
+			response = urllib.request.urlopen('http://fetch-site-backups.openra.net/' + remote_f)
+			CHUNK = 16 * 1024
+			with open("/backups/data/fetch-site-backups.ihptru.net/www/baxxster/" + remote_f, 'wb') as f:
+				while True:
+					chunk = response.read(CHUNK)
+					if not chunk: break
+					f.write(chunk)
+
+			print("\n----------------------")
+			print("Downloaded remote file to /backups/data/fetch-site-backups.ihptru.net/www/baxxster/" + remote_f)
+			print("----------------------")
+
+
+			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/baxxster/' + remote_f, '/backups/baxxster/openra/' + remote_f)
+
+
+			os.remove('/backups/data/fetch-site-backups.ihptru.net/www/baxxster/' + remote_f)
+			print("\n----------------------")
+			print("Removed /backups/data/fetch-site-backups.ihptru.net/www/baxxster/" + remote_f + " from Local Disc")
+			print("----------------------")
+
 		else:
 			print("\n----------------------")
 			print("File " + remote_f + " exists on Yandex.Disc. Skipping...")
 			print("----------------------")
 
-		os.remove('/backups/data/baxxster/' + remote_f)
-		print("\n----------------------")
-		print("Removed /backups/data/baxxster/" + remote_f + " from Local Disc ---")
-		print("----------------------")
 
 
 

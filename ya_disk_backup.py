@@ -13,7 +13,7 @@ from src.YandexDiskRestClient import YandexDiskRestClient
 
 class MakeBackup:
 	def __init__(self):
-		token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa_change_it"
+		token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa_change_it"
 		self.client = YandexDiskRestClient(token)
 
 	def get_disk_metadata(self):
@@ -147,7 +147,7 @@ def main():
 		if not yandex.get_meta_of_element('/backups/ruweb/' + _file):	# File does not exist on Yandex.Disc
 
 			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/ruweb/' + _file, '/backups/ruweb/' + _file)
-			time.sleep(60)
+			time.sleep(600)
 
 		else:
 			print("\n----------------------")
@@ -193,9 +193,9 @@ def main():
 			print("Downloaded remote file to /backups/data/fetch-site-backups.ihptru.net/www/baxxster/" + remote_f)
 			print("----------------------")
 
-
+			time.sleep(5)
 			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/baxxster/' + remote_f, '/backups/baxxster/openra/' + remote_f)
-			time.sleep(60)
+			time.sleep(600)
 
 			os.remove('/backups/data/fetch-site-backups.ihptru.net/www/baxxster/' + remote_f)
 			print("\n----------------------")

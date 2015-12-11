@@ -147,7 +147,7 @@ def main():
 		if not yandex.get_meta_of_element('/backups/ruweb/' + _file):	# File does not exist on Yandex.Disc
 
 			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/ruweb/' + _file, '/backups/ruweb/' + _file)
-			time.sleep(600)
+			time.sleep(900)
 
 		else:
 			print("\n----------------------")
@@ -195,7 +195,9 @@ def main():
 
 			time.sleep(5)
 			yandex.upload_file_from_url('http://fetch-site-backups.ihptru.net/baxxster/' + remote_f, '/backups/baxxster/openra/' + remote_f)
-			time.sleep(600)
+			time.sleep(100)
+			if os.path.getsize("/backups/data/fetch-site-backups.ihptru.net/www/baxxster/" + remote_f) > 200000000:
+				time.sleep(900)
 
 			os.remove('/backups/data/fetch-site-backups.ihptru.net/www/baxxster/' + remote_f)
 			print("\n----------------------")
